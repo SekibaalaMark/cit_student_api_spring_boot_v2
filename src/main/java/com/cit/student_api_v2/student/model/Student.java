@@ -1,11 +1,23 @@
-package com.cit.student_api_v2.student.models;
+package com.cit.student_api_v2.student.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Student {
+    public Student() {
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private String registrationNumber;
-    private double cgpa;
+    private Double cgpa;
 
-    public Student(String name, String registrationNumber, double cgpa) {
+    public Student(String name, String registrationNumber, Double cgpa) {
         this.name = name;
         this.registrationNumber = registrationNumber;
         this.cgpa = cgpa;
@@ -27,11 +39,11 @@ public class Student {
         this.registrationNumber = registrationNumber;
     }
 
-    public double getCgpa() {
+    public Double getCgpa() {
         return cgpa;
     }
 
-    public void setCgpa(double cgpa) {
+    public void setCgpa(Double cgpa) {
         this.cgpa = cgpa;
     }
 }
