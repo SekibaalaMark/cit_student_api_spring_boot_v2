@@ -1,5 +1,8 @@
 package com.cit.student_api_v2.student.service;
 
+import com.cit.student_api_v2.student.dto.StudentRequest;
+import com.cit.student_api_v2.student.dto.StudentUpdateRequest;
+import com.cit.student_api_v2.student.mapper.StudentMapper;
 import com.cit.student_api_v2.student.model.Student;
 import com.cit.student_api_v2.student.repository.StudentRepository;
 import org.springframework.stereotype.Service;
@@ -11,8 +14,11 @@ import java.util.Optional;
 @Service
 public class StudentService {
     private final StudentRepository studentRepository;
-    public StudentService(StudentRepository studentRepository){
+    private final StudentMapper studentMapper;
+    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper){
         this.studentRepository = studentRepository;
+        this.studentMapper = studentMapper;
+
     }
     public Student findByRegistrationNumber(String registrationNumber){
         return studentRepository.findByRegistrationNumber(registrationNumber);
@@ -22,8 +28,9 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public void save(Student student){
-        studentRepository.save(student);
+    public Student save(StudentRequest studentRequest){
+        Student student = studentMapper.toEntity(studentRequest);
+        return  studentRepository.save(student);
     }
 
     public void deleteByRegistrationNumber(String registrationNumber){
@@ -40,18 +47,13 @@ public class StudentService {
     }
 
     @Transactional
-    public Student updateStudent(Long id, Student updatedDetails) {
-        Student existing = studentRepository.findById(id)
+    public Student updateStudent(Long id, StudentUpdateRequest updateRequest) {
+        Student existingStudent = studentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
-        if(updatedDetails.getName() != null && !updatedDetails.getName().isBlank()){
-            existing.setName(updatedDetails.getName());
-        } else if (updatedDetails.getRegistrationNumber() != null && !updatedDetails.getRegistrationNumber().isBlank()){
-            existing.setRegistrationNumber(updatedDetails.getRegistrationNumber());
-        } else if (updatedDetails.getCgpa() != null) {
-            existing.setCgpa(updatedDetails.getCgpa());
-        }
-        return studentRepository.save(existing);
+        studentMapper.updateEntityFromRequest(updateRequest , existingStudent);
+
+        return studentRepository.save(existingStudent);
     }
 
 
