@@ -1,6 +1,9 @@
 package com.cit.student_api_v2.student.controller;
+import com.cit.student_api_v2.student.dto.StudentRequest;
+import com.cit.student_api_v2.student.dto.StudentUpdateRequest;
 import com.cit.student_api_v2.student.model.Student;
 import com.cit.student_api_v2.student.service.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,15 +29,15 @@ public class StudentController {
     }
 
     @PostMapping
-    public Student addStudent(@RequestBody Student student){
-        studentService.save(student);
-        return student;
+    public Student addStudent(@Valid @RequestBody StudentRequest studentRequest){
+        return studentService.save(studentRequest);
     }
 
     @PutMapping("/{id}")
-    public Student updateStudent(@PathVariable Long id, @RequestBody Student updatedStudent){
-        return studentService.updateStudent(id,updatedStudent);
+    public Student updateStudent(@PathVariable Long id, @Valid @RequestBody StudentUpdateRequest updateRequest){
+        return studentService.updateStudent(id,updateRequest);
     }
+
 
     @DeleteMapping("/{id}")
     public void deleteStudent(@PathVariable Long id){
