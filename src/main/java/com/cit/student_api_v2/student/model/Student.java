@@ -46,4 +46,8 @@ public class Student {
     public void setCgpa(Double cgpa) {
         this.cgpa = cgpa;
     }
+
+    public Long getId() {
+        return id;
+    }
 }
