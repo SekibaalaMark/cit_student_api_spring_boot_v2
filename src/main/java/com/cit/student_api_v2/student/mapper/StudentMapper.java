@@ -49,6 +49,7 @@ public class StudentMapper {
         response.setCgpa(student.getCgpa());
         response.setName(student.getName());
         response.setRegistrationNumber(student.getRegistrationNumber());
+        response.setId(student.getId());
         return response;
     }
 

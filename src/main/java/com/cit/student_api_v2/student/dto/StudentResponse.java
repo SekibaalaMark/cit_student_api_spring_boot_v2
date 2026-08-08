@@ -1,6 +1,7 @@
 package com.cit.student_api_v2.student.dto;
 
 public class StudentResponse {
+    private Long id;
     private String name;
     private String registrationNumber;
     private Double cgpa;
@@ -27,5 +28,13 @@ public class StudentResponse {
 
     public void setCgpa(Double cgpa) {
         this.cgpa = cgpa;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
