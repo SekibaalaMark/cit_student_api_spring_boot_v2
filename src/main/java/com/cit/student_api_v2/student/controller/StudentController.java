@@ -24,13 +24,15 @@ public class StudentController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<StudentResponse>>>  getAllStudents(){
         List<StudentResponse> data=  studentService.findAll();
-        ApiResponse<List<StudentResponse>> apiResponse = new ApiResponse<>("SUCESS","List of Students",data);
+        ApiResponse<List<StudentResponse>> apiResponse = new ApiResponse<>("SUCCESS","List of Students",data);
         return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/reg/{registrationNumber}")
-    public StudentResponse getStudent(@PathVariable String registrationNumber){
-        return studentService.findByRegistrationNumber(registrationNumber);
+    public ResponseEntity<ApiResponse<StudentResponse>>  getStudent(@PathVariable String registrationNumber){
+        StudentResponse data =  studentService.findByRegistrationNumber(registrationNumber);
+        ApiResponse<StudentResponse> apiResponse = new ApiResponse<>("SUCCESS","Student Returned",data);
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/{id}")
@@ -39,8 +41,10 @@ public class StudentController {
     }
 
     @PostMapping
-    public Student addStudent(@Valid @RequestBody StudentRequest studentRequest){
-        return studentService.save(studentRequest);
+    public ResponseEntity<ApiResponse<StudentResponse>> addStudent(@Valid @RequestBody StudentRequest studentRequest){
+        StudentResponse studentResponse =  studentService.save(studentRequest);
+        ApiResponse<StudentResponse> apiResponse = new ApiResponse<>("SUCCESS","Student Added Successfully",studentResponse);
+        return ResponseEntity.status(201).body(apiResponse);
     }
 
     @PutMapping("/{id}")
