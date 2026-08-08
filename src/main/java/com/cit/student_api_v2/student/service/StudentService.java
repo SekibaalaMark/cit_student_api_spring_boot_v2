@@ -67,12 +67,12 @@ public class StudentService {
     }
 
     @Transactional
-    public Student updateStudent(Long id, StudentUpdateRequest updateRequest) {
+    public StudentResponse updateStudent(Long id, StudentUpdateRequest updateRequest) {
         Student existingStudent = studentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
         studentMapper.updateEntityFromRequest(updateRequest , existingStudent);
-
-        return studentRepository.save(existingStudent);
+        Student student = studentRepository.save(existingStudent);
+        return studentMapper.toResponse(student);
     }
 }
