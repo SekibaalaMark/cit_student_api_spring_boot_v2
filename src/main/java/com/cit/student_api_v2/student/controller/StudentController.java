@@ -15,7 +15,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/students")
 public class StudentController {
-    private final StudentService studentService;
+    private StudentService studentService;
 
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
@@ -24,36 +24,32 @@ public class StudentController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<StudentResponse>>>  getAllStudents(){
         List<StudentResponse> data=  studentService.findAll();
-        ApiResponse<List<StudentResponse>> body = new ApiResponse<>("SUCCESS","List of Students",data);
-        return ResponseEntity.status(200).body(body);
+        ApiResponse<List<StudentResponse>> apiResponse = new ApiResponse<>("SUCCESS","List of Students",data);
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/reg/{registrationNumber}")
     public ResponseEntity<ApiResponse<StudentResponse>>  getStudent(@PathVariable String registrationNumber){
         StudentResponse data =  studentService.findByRegistrationNumber(registrationNumber);
-        ApiResponse<StudentResponse> body = new ApiResponse<>("SUCCESS","Student Returned",data);
-        return ResponseEntity.status(200).body(body);
+        ApiResponse<StudentResponse> apiResponse = new ApiResponse<>("SUCCESS","Student Returned",data);
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<StudentResponse>>  getStudent(@PathVariable Long id){
-        StudentResponse studentResponse =  studentService.findById(id);
-        ApiResponse<StudentResponse> body = new ApiResponse<>("SUCCESS","Student Returned",studentResponse);
-        return ResponseEntity.status(200).body(body);
+    public StudentResponse getStudent(@PathVariable Long id){
+        return studentService.findById(id);
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<StudentResponse>> addStudent(@Valid @RequestBody StudentRequest studentRequest){
         StudentResponse studentResponse =  studentService.save(studentRequest);
-        ApiResponse<StudentResponse> body = new ApiResponse<>("SUCCESS","Student Added Successfully",studentResponse);
-        return ResponseEntity.status(201).body(body);
+        ApiResponse<StudentResponse> apiResponse = new ApiResponse<>("SUCCESS","Student Added Successfully",studentResponse);
+        return ResponseEntity.status(201).body(apiResponse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<StudentResponse>> updateStudent(@PathVariable Long id, @Valid @RequestBody StudentUpdateRequest updateRequest){
-        StudentResponse studentResponse = studentService.updateStudent(id,updateRequest);
-        ApiResponse<StudentResponse> apiResponse = new ApiResponse<>("SUCCESS","Student "+ id + " Updated",studentResponse);
-        return ResponseEntity.status(200).body(apiResponse);
+    public Student updateStudent(@PathVariable Long id, @Valid @RequestBody StudentUpdateRequest updateRequest){
+        return studentService.updateStudent(id,updateRequest);
     }
 
 
