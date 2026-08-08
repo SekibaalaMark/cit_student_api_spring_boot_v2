@@ -48,13 +48,18 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public Student updateStudent(@PathVariable Long id, @Valid @RequestBody StudentUpdateRequest updateRequest){
-        return studentService.updateStudent(id,updateRequest);
+    public ResponseEntity<ApiResponse<StudentResponse>> updateStudent(@PathVariable Long id, @Valid @RequestBody StudentUpdateRequest updateRequest){
+        StudentResponse studentResponse =  studentService.updateStudent(id,updateRequest);
+        ApiResponse<StudentResponse> apiResponse = new ApiResponse<>("SUCCESS","Student "+id+" Updated Successfully",studentResponse);
+        return ResponseEntity.status(200).body(apiResponse);
+
     }
 
 
     @DeleteMapping("/{id}")
-    public void deleteStudent(@PathVariable Long id){
+    public ResponseEntity<ApiResponse<Void>> deleteStudent(@PathVariable Long id){
         studentService.delete(id);
+        ApiResponse<Void> apiResponse = new ApiResponse<>("SUCCESS","Student "+id+" deleted Successfully",null);
+        return ResponseEntity.status(204).body(apiResponse);
     }
 }
