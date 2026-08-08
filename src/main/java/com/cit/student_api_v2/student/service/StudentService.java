@@ -42,9 +42,11 @@ public class StudentService {
                 .toList();
     }
 
-    public Student save(StudentRequest studentRequest){
+    public StudentResponse save(StudentRequest studentRequest){
         Student student = studentMapper.toEntity(studentRequest);
-        return  studentRepository.save(student);
+        Student savedStudent =  studentRepository.save(student);
+        return studentMapper.toResponse(savedStudent);
+
     }
 
     public void deleteByRegistrationNumber(String registrationNumber){
