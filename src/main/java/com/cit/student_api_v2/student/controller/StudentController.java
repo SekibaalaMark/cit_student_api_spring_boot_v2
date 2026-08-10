@@ -6,6 +6,7 @@ import com.cit.student_api_v2.student.dto.StudentUpdateRequest;
 import com.cit.student_api_v2.student.model.Student;
 import com.cit.student_api_v2.student.service.StudentService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,11 +16,20 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/students")
 public class StudentController {
-    private StudentService studentService;
+    private final StudentService studentService;
 
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
+
+
+    @GetMapping("id/{id}")
+    public ResponseEntity<ApiResponse<StudentResponse>> getStudent(@PathVariable Long id){
+        StudentResponse studentResponse =  studentService.findById(id);
+        ApiResponse<StudentResponse> apiResponse = new ApiResponse<>("SUCCESS","Student Found",studentResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<StudentResponse>>>  getAllStudents(){
@@ -35,10 +45,7 @@ public class StudentController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @GetMapping("/{id}")
-    public StudentResponse getStudent(@PathVariable Long id){
-        return studentService.findById(id);
-    }
+
 
     @PostMapping
     public ResponseEntity<ApiResponse<StudentResponse>> addStudent(@Valid @RequestBody StudentRequest studentRequest){
