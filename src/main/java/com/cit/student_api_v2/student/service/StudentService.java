@@ -7,6 +7,7 @@ import com.cit.student_api_v2.student.exception.StudentNotFoundException;
 import com.cit.student_api_v2.student.mapper.StudentMapper;
 import com.cit.student_api_v2.student.model.Student;
 import com.cit.student_api_v2.student.repository.StudentRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,8 +37,8 @@ public class StudentService {
         return studentGrader.grade(student.getCgpa());
     }
 
-    public List<StudentResponse> findAll(){
-        return studentRepository.findAll()
+    public List<StudentResponse> findAll(int offset, int pageSize){
+        return studentRepository.findAll(PageRequest.of(offset,pageSize))
                 .stream()
                 .map(studentMapper::toResponse)
                 .toList();
