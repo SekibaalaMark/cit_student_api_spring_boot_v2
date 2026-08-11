@@ -23,7 +23,7 @@ public class StudentController {
     }
 
 
-    @GetMapping("id/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<ApiResponse<StudentResponse>> getStudent(@PathVariable Long id){
         StudentResponse studentResponse =  studentService.findById(id);
         ApiResponse<StudentResponse> apiResponse = new ApiResponse<>("SUCCESS","Student Found",studentResponse);
@@ -32,8 +32,10 @@ public class StudentController {
 
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<StudentResponse>>>  getAllStudents(){
-        List<StudentResponse> data=  studentService.findAll();
+    public ResponseEntity<ApiResponse<List<StudentResponse>>>  getAllStudents(
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "10") int pageSize){
+        List<StudentResponse> data=  studentService.findAll(offset,pageSize);
         ApiResponse<List<StudentResponse>> apiResponse = new ApiResponse<>("SUCCESS","List of Students",data);
         return ResponseEntity.ok(apiResponse);
     }
