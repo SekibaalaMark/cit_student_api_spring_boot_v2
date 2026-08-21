@@ -1,5 +1,6 @@
 package com.cit.student_api_v2.student.service;
 
+import com.cit.student_api_v2.page.response.PageResponse;
 import com.cit.student_api_v2.student.dto.StudentRequest;
 import com.cit.student_api_v2.student.dto.StudentResponse;
 import com.cit.student_api_v2.student.dto.StudentUpdateRequest;
@@ -7,12 +8,13 @@ import com.cit.student_api_v2.student.exception.StudentNotFoundException;
 import com.cit.student_api_v2.student.mapper.StudentMapper;
 import com.cit.student_api_v2.student.model.Student;
 import com.cit.student_api_v2.student.repository.StudentRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 
 @Service
@@ -36,11 +38,22 @@ public class StudentService {
         return studentGrader.grade(student.getCgpa());
     }
 
-    public List<StudentResponse> findAll(){
-        return studentRepository.findAll()
+    public PageResponse<StudentResponse> findAll(int offset, int pageSize){
+        int zeroBasedPage = Math.max(0,offset -1);
+        Pageable pageable = PageRequest.of(zeroBasedPage,pageSize, Sort.by("cgpa").descending());
+        Page<Student> studentPage = studentRepository.findAll(pageable);
+        List<StudentResponse> studentResponseList = studentPage.getContent()
                 .stream()
                 .map(studentMapper::toResponse)
                 .toList();
+
+        return new PageResponse<StudentResponse>(
+                studentResponseList,
+                zeroBasedPage,studentPage.getSize(),
+                studentPage.getTotalElements(),
+                studentPage.getTotalPages(),
+                studentPage.isLast()
+        );
     }
 
     public StudentResponse save(StudentRequest studentRequest){
@@ -51,10 +64,14 @@ public class StudentService {
     }
 
     public void deleteByRegistrationNumber(String registrationNumber){
+        studentRepository.findByRegistrationNumber(registrationNumber).
+                orElseThrow(() -> new StudentNotFoundException("Student with RegNo.: " + registrationNumber + " Not found"));
         studentRepository.deleteByRegistrationNumber(registrationNumber);
     }
 
     public void delete(Long id){
+        studentRepository.findById(id).
+                orElseThrow(() -> new StudentNotFoundException("Student with Id: " + id + " Not found"));
         studentRepository.deleteById(id);
     }
 
