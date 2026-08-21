@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/students")
+@RequestMapping("/api/v1/students")
 public class StudentController {
     private final StudentService studentService;
 
@@ -32,10 +32,22 @@ public class StudentController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<PageResponse<StudentResponse>>>  getAllStudents(
-            @RequestParam(defaultValue = "1") int offset,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int pageSize){
-        PageResponse<StudentResponse> data=  studentService.findAll(offset,pageSize);
+        PageResponse<StudentResponse> data=  studentService.findAll(page,pageSize);
         ApiResponse<PageResponse<StudentResponse>> apiResponse = new ApiResponse<>("SUCCESS","List of Students",data);
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+
+    @GetMapping("/bestStudents")
+    public ResponseEntity<ApiResponse<PageResponse<StudentResponse>>> getHighAchievers(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(defaultValue = "4.4") double cgpa
+    ){
+        PageResponse<StudentResponse> data = studentService.findHighAchievers(page,pageSize,cgpa);
+        ApiResponse<PageResponse<StudentResponse>> apiResponse = new ApiResponse<>("SUCCESS","Page of Students",data);
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
