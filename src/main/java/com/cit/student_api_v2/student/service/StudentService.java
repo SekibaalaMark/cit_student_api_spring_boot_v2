@@ -38,8 +38,8 @@ public class StudentService {
         return studentGrader.grade(student.getCgpa());
     }
 
-    public PageResponse<StudentResponse> findAll(int offset, int pageSize){
-        int zeroBasedPage = Math.max(0,offset -1);
+    public PageResponse<StudentResponse> findAll(int page, int pageSize){
+        int zeroBasedPage = Math.max(0,page -1);
         Pageable pageable = PageRequest.of(zeroBasedPage,pageSize, Sort.by("cgpa").descending());
         Page<Student> studentPage = studentRepository.findAll(pageable);
         List<StudentResponse> studentResponseList = studentPage.getContent()
@@ -49,7 +49,8 @@ public class StudentService {
 
         return new PageResponse<StudentResponse>(
                 studentResponseList,
-                zeroBasedPage,studentPage.getSize(),
+                page,
+                studentPage.getSize(),
                 studentPage.getTotalElements(),
                 studentPage.getTotalPages(),
                 studentPage.isLast()
@@ -90,5 +91,24 @@ public class StudentService {
         studentMapper.updateEntityFromRequest(updateRequest , existingStudent);
         Student student = studentRepository.save(existingStudent);
         return studentMapper.toResponse(student);
+    }
+
+    public PageResponse<StudentResponse> findHighAchievers(int page, int pageSize,double cgpa){
+        int zeroBasedPage = Math.max(0,page-1);
+        Pageable pageable = PageRequest.of(zeroBasedPage,pageSize,Sort.by("cgpa").descending());
+        Page<Student> studentPage = studentRepository.findByCgpaGreaterThanEqual(cgpa,pageable);
+        List<StudentResponse> studentResponses = studentPage.getContent()
+                .stream()
+                .map(studentMapper :: toResponse)
+                .toList();
+
+        return new PageResponse<>(
+                studentResponses,
+                page,
+                pageSize,
+                studentPage.getTotalElements(),
+                studentPage.getTotalPages(),
+                studentPage.isLast()
+        );
     }
 }
