@@ -4,6 +4,7 @@ import com.cit.student_api_v2.page.response.PageResponse;
 import com.cit.student_api_v2.student.dto.StudentRequest;
 import com.cit.student_api_v2.student.dto.StudentResponse;
 import com.cit.student_api_v2.student.dto.StudentUpdateRequest;
+import com.cit.student_api_v2.student.model.Status;
 import com.cit.student_api_v2.student.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -82,4 +83,15 @@ public class StudentController {
         ApiResponse<Void> apiResponse = new ApiResponse<>("SUCCESS","Student "+id+" deleted Successfully",null);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(apiResponse);
     }
+
+    @GetMapping("/status-with-enrollment/{status}")
+    public ResponseEntity<ApiResponse<List<StudentResponse>>> getByStatusWithEnrollment(@PathVariable Status status){
+        List<StudentResponse> studentResponses = studentService.getByStatusWithEnrollment(status);
+        ApiResponse<List<StudentResponse>> apiResponse = new ApiResponse<>("SUCCESS",
+                "List of Students "+ status.name(),
+                studentResponses
+                );
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
 }
