@@ -6,6 +6,7 @@ import com.cit.student_api_v2.student.dto.StudentResponse;
 import com.cit.student_api_v2.student.dto.StudentUpdateRequest;
 import com.cit.student_api_v2.student.exception.StudentNotFoundException;
 import com.cit.student_api_v2.student.mapper.StudentMapper;
+import com.cit.student_api_v2.student.model.Status;
 import com.cit.student_api_v2.student.model.Student;
 import com.cit.student_api_v2.student.repository.StudentRepository;
 import org.springframework.data.domain.Page;
@@ -110,5 +111,14 @@ public class StudentService {
                 studentPage.getTotalPages(),
                 studentPage.isLast()
         );
+    }
+
+
+
+    public List<StudentResponse> getByStatusWithEnrollment(Status status){
+        return studentRepository.findByStatusWithEnrollment(status)
+                .stream()
+                .map(studentMapper :: toResponse)
+                .toList();
     }
 }
