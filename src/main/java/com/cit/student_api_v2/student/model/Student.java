@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class Student {
     private Long id;
 
     @Size(min = 3 , max = 50, message = "name must be between 3 and 50 characters")
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String name;
 
     @Column(unique = true,nullable = false,length = 10)
@@ -27,16 +26,34 @@ public class Student {
 
     @Min(value = 0, message = "CGPA cannot be below 0")
     @Max(value = 5, message = "CGPA cannot exceed 5")
+    @Column(nullable = false)
     private Double cgpa;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status;
 
     @OneToMany(mappedBy = "student")
     private List<Enrollment> enrollments = new ArrayList<>();
 
 
-    public Student(String name, String registrationNumber, Double cgpa) {
+    public Student(String name, String registrationNumber, Double cgpa,Status status) {
         this.name = name;
         this.registrationNumber = registrationNumber;
         this.cgpa = cgpa;
+        this.status = status;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public String getName() {
