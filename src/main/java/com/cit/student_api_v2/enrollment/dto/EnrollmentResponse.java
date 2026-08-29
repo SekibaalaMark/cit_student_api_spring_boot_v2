@@ -6,7 +6,5 @@ import java.time.LocalDateTime;
 public record EnrollmentResponse(
         Long enrollmentId,
         Long studentId,
-        String studentRegistrationNumber,
-        String studentName,
         LocalDateTime createdAt
 ) {}
