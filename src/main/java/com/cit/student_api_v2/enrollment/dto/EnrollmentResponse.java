@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 
 public record EnrollmentResponse(
-        Long enrollmentId,
+        Long Id,
         Long studentId,
         LocalDateTime createdAt
 ) {}
