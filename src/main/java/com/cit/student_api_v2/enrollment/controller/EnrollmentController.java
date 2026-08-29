@@ -5,6 +5,7 @@ import com.cit.student_api_v2.enrollment.dto.EnrollmentRequest;
 import com.cit.student_api_v2.enrollment.dto.EnrollmentResponse;
 import com.cit.student_api_v2.enrollment.service.EnrollmentService;
 import com.cit.student_api_v2.page.response.PageResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -45,6 +46,18 @@ public class EnrollmentController {
         ApiResponse<EnrollmentResponse> apiResponse = enrollmentService.getEnrollmentSummaryById(id);
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<EnrollmentResponse>> updateEnrollment(
+            @PathVariable Long id,
+            @Valid @RequestBody EnrollmentRequest enrollmentRequest
+    ){
+        ApiResponse<EnrollmentResponse> apiResponse = enrollmentService.updateEnrollment(id,enrollmentRequest);
+
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+
 
 
 
