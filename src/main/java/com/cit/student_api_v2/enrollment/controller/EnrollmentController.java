@@ -24,9 +24,9 @@ public class EnrollmentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
-    @GetMapping("/id/{id}")
-    public ResponseEntity<ApiResponse<EnrollmentResponse>> getEnrollment(@PathVariable Long id){
-        ApiResponse<EnrollmentResponse> apiResponse = enrollmentService.getEnrollmentById(id);
+    @GetMapping("summary/id/{id}")
+    public ResponseEntity<ApiResponse<EnrollmentResponse>> getEnrollmentSummaryById(@PathVariable Long id){
+        ApiResponse<EnrollmentResponse> apiResponse = enrollmentService.getEnrollmentSummaryById(id);
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
