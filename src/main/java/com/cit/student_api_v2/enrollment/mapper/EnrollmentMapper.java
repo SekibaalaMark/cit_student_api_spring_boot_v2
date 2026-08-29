@@ -13,8 +13,6 @@ public class EnrollmentMapper {
         return new EnrollmentResponse(
                 enrollment.getId(),
                 enrollment.getStudent().getId(),
-                enrollment.getStudent().getRegistrationNumber(),
-                enrollment.getStudent().getName(),
                 enrollment.getCreatedAt()
         );
     }
