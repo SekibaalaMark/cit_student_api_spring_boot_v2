@@ -31,12 +31,6 @@ public class EnrollmentFacade {
 
         Enrollment enrollment = new Enrollment();
         enrollment.setStudent(student);
-
-        enrollmentRepository.save(enrollment);
-        return new EnrollmentResponse(enrollment.getId(),
-                enrollment.getStudent().getId(),
-                enrollment.getStudent().getRegistrationNumber(),
-                enrollment.getStudent().getName(),
-                enrollment.getCreatedAt());
+        return enrollmentMapper.toResponse(enrollmentRepository.save(enrollment));
     }
 }
