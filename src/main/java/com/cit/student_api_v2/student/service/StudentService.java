@@ -30,12 +30,12 @@ public class StudentService {
 
     }
     public StudentResponse findByRegistrationNumber(String registrationNumber){
-        Student student = studentRepository.findByRegistrationNumber(registrationNumber).orElseThrow(()-> new StudentNotFoundException("Student with registration Number "+ registrationNumber + " Not Found"));
+        Student student = studentRepository.findByRegistrationNumber(registrationNumber).orElseThrow(()-> new StudentNotFoundException("Registration Number: "+ registrationNumber));
         return studentMapper.toResponse(student);
     }
 
     public Character grade(Long id){
-        Student student = studentRepository.findById(id).orElseThrow(()-> new StudentNotFoundException("Student with id: " + id + "Not Found"));
+        Student student = studentRepository.findById(id).orElseThrow(()-> new StudentNotFoundException("Id: " + id));
         return studentGrader.grade(student.getCgpa());
     }
 
@@ -67,27 +67,27 @@ public class StudentService {
 
     public void deleteByRegistrationNumber(String registrationNumber){
         studentRepository.findByRegistrationNumber(registrationNumber).
-                orElseThrow(() -> new StudentNotFoundException("Student with RegNo.: " + registrationNumber + " Not found"));
+                orElseThrow(() -> new StudentNotFoundException("Registration Number: " + registrationNumber));
         studentRepository.deleteByRegistrationNumber(registrationNumber);
     }
 
     public void delete(Long id){
         studentRepository.findById(id).
-                orElseThrow(() -> new StudentNotFoundException("Student with Id: " + id + " Not found"));
+                orElseThrow(() -> new StudentNotFoundException("Id: " + id));
         studentRepository.deleteById(id);
     }
 
 
     public StudentResponse findById(Long id){
         Student student = studentRepository.findById(id).
-                orElseThrow(() -> new StudentNotFoundException("Student with Id: " + id + " Not found"));
+                orElseThrow(() -> new StudentNotFoundException("Id: " + id));
         return studentMapper.toResponse(student);
 
     }
 
     public StudentResponse updateStudent(Long id, StudentUpdateRequest updateRequest) {
         Student existingStudent = studentRepository.findById(id)
-                .orElseThrow(() -> new StudentNotFoundException("Student with id: " + id + "Not Found"));
+                .orElseThrow(() -> new StudentNotFoundException("Id: " + id));
 
         studentMapper.updateEntityFromRequest(updateRequest , existingStudent);
         Student student = studentRepository.save(existingStudent);
