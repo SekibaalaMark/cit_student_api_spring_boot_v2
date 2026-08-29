@@ -32,9 +32,10 @@ public class EnrollmentService {
     }
 
 
-    @Transactional(readOnly = true)
-    public ApiResponse<EnrollmentResponse> getEnrollmentById(Long id){
-        Enrollment enrollment = enrollmentRepository.findById(id)
+    //@Transactional(readOnly = true)
+
+    public ApiResponse<EnrollmentResponse> getEnrollmentSummaryById(Long id){
+        Enrollment enrollment = enrollmentRepository.findByIdWithSummary(id)
                 .orElseThrow(() -> new EnrollmentNotFoundException("Enrollment with "+ id + " not Found"));
         EnrollmentResponse enrollmentResponse = enrollmentMapper.toResponse(enrollment);
         return new ApiResponse<>("SUCCESS","Enrollment item",enrollmentResponse);
