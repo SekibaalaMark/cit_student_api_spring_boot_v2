@@ -4,6 +4,7 @@ import com.cit.student_api_v2.page.response.PageResponse;
 import com.cit.student_api_v2.student.dto.StudentRequest;
 import com.cit.student_api_v2.student.dto.StudentResponse;
 import com.cit.student_api_v2.student.dto.StudentUpdateRequest;
+import com.cit.student_api_v2.student.model.Status;
 import com.cit.student_api_v2.student.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/students")
+@RequestMapping("/api/v1/students")
 public class StudentController {
     private final StudentService studentService;
 
@@ -32,10 +33,22 @@ public class StudentController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<PageResponse<StudentResponse>>>  getAllStudents(
-            @RequestParam(defaultValue = "1") int offset,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int pageSize){
-        PageResponse<StudentResponse> data=  studentService.findAll(offset,pageSize);
+        PageResponse<StudentResponse> data=  studentService.findAll(page,pageSize);
         ApiResponse<PageResponse<StudentResponse>> apiResponse = new ApiResponse<>("SUCCESS","List of Students",data);
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+
+    @GetMapping("/bestStudents")
+    public ResponseEntity<ApiResponse<PageResponse<StudentResponse>>> getHighAchievers(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(defaultValue = "4.4") double cgpa
+    ){
+        PageResponse<StudentResponse> data = studentService.findHighAchievers(page,pageSize,cgpa);
+        ApiResponse<PageResponse<StudentResponse>> apiResponse = new ApiResponse<>("SUCCESS","Page of Students",data);
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
@@ -70,4 +83,15 @@ public class StudentController {
         ApiResponse<Void> apiResponse = new ApiResponse<>("SUCCESS","Student "+id+" deleted Successfully",null);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(apiResponse);
     }
+
+    @GetMapping("/status-with-enrollment/{status}")
+    public ResponseEntity<ApiResponse<List<StudentResponse>>> getByStatusWithEnrollment(@PathVariable Status status){
+        List<StudentResponse> studentResponses = studentService.getByStatusWithEnrollment(status);
+        ApiResponse<List<StudentResponse>> apiResponse = new ApiResponse<>("SUCCESS",
+                "List of Students "+ status.name(),
+                studentResponses
+                );
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
 }

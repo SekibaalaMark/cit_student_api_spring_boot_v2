@@ -19,6 +19,7 @@ public class StudentMapper {
         student.setName(studentRequest.getName());
         student.setRegistrationNumber(studentRequest.getRegistrationNumber());
         student.setCgpa(studentRequest.getCgpa());
+        student.setStatus(studentRequest.getStatus());
         return student;
     }
 
@@ -39,6 +40,10 @@ public class StudentMapper {
         if(studentRequest.getCgpa() != null){
             existingStudent.setCgpa(studentRequest.getCgpa());
         }
+
+        if(studentRequest.getStatus() != null){
+            existingStudent.setStatus(studentRequest.getStatus());
+        }
     }
 
     public StudentResponse toResponse(Student student){
@@ -50,6 +55,8 @@ public class StudentMapper {
         response.setName(student.getName());
         response.setRegistrationNumber(student.getRegistrationNumber());
         response.setId(student.getId());
+        response.setStatus(student.getStatus());
+
         return response;
     }
 

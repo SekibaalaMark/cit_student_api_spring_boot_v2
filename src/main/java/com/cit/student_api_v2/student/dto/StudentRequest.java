@@ -1,5 +1,6 @@
 package com.cit.student_api_v2.student.dto;
 
+import com.cit.student_api_v2.student.model.Status;
 import jakarta.validation.constraints.*;
 
 public class StudentRequest {
@@ -13,6 +14,17 @@ public class StudentRequest {
     @DecimalMin(value = "0.0", message = "GPA must be at least 0.0")
     @DecimalMax(value = "5.0", message = "GPA cannot exceed 5.0")
     private Double cgpa;
+
+    @NotNull(message = "Status is Required")
+    private Status status;
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public String getName() {
         return name;

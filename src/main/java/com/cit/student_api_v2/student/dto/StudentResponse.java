@@ -1,10 +1,21 @@
 package com.cit.student_api_v2.student.dto;
 
+import com.cit.student_api_v2.student.model.Status;
+
 public class StudentResponse {
     private Long id;
     private String name;
     private String registrationNumber;
     private Double cgpa;
+    private Status status;
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public String getName() {
         return name;
