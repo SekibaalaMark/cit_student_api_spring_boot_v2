@@ -86,7 +86,14 @@ public class EnrollmentService {
                 "Enrollment Updated Successfully",
                 enrollmentResponse
         );
+    }
 
-
+    @Transactional
+    public ApiResponse<Void> unEnrollStudent(Long id){
+        int deletedRows = enrollmentRepository.deleteEnrollmentById(id);
+        if(deletedRows ==0){
+            return new ApiResponse<>("ERROR","Enrollment Id Unknown",null);
+        }
+        return new ApiResponse<>("SUCCESS","Student Unenrolled Successfully",null);
     }
 }
