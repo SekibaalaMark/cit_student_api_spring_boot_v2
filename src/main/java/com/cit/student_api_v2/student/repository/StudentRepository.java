@@ -22,7 +22,7 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
     Page<Student> findByCgpaGreaterThanEqual(double cgpa, Pageable pageable);
 
 
-    @Query("SELECT s from Student s JOIN FETCH s.enrollments WHERE s.status = :status")
+    @Query("SELECT s from Student s  JOIN FETCH s.enrollments WHERE s.status = :status")
     List<Student> findByStatusWithEnrollment(@Param("status") Status status);
 
 

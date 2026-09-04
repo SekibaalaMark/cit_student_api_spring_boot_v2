@@ -81,7 +81,7 @@ public class StudentController {
     public ResponseEntity<ApiResponse<Void>> deleteStudent(@PathVariable Long id){
         studentService.delete(id);
         ApiResponse<Void> apiResponse = new ApiResponse<>("SUCCESS","Student "+id+" deleted Successfully",null);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(apiResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
     @GetMapping("/status-with-enrollment/{status}")

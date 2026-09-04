@@ -5,14 +5,20 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public class Student {
-    public Student() {
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,9 +39,8 @@ public class Student {
     @Column(nullable = false)
     private Status status;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Enrollment> enrollments = new ArrayList<>();
-
 
     public Student(String name, String registrationNumber, Double cgpa,Status status) {
         this.name = name;
@@ -44,51 +49,4 @@ public class Student {
         this.status = status;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getRegistrationNumber() {
-        return registrationNumber;
-    }
-
-    public void setRegistrationNumber(String registrationNumber) {
-        this.registrationNumber = registrationNumber;
-    }
-
-    public Double getCgpa() {
-        return cgpa;
-    }
-
-    public void setCgpa(Double cgpa) {
-        this.cgpa = cgpa;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public List<Enrollment> getEnrollments() {
-        return enrollments;
-    }
-
-    public void setEnrollments(List<Enrollment> enrollments) {
-        this.enrollments = enrollments;
-    }
 }

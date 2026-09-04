@@ -9,6 +9,9 @@ import com.cit.student_api_v2.enrollment.mapper.EnrollmentMapper;
 import com.cit.student_api_v2.enrollment.model.Enrollment;
 import com.cit.student_api_v2.enrollment.repository.EnrollmentRepository;
 import com.cit.student_api_v2.page.response.PageResponse;
+import com.cit.student_api_v2.student.exception.StudentNotFoundException;
+import com.cit.student_api_v2.student.model.Student;
+import com.cit.student_api_v2.student.repository.StudentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +26,13 @@ public class EnrollmentService {
     private final EnrollmentFacade enrollmentFacade;
     private final EnrollmentRepository enrollmentRepository;
     private final EnrollmentMapper enrollmentMapper;
+    private final StudentRepository studentRepository;
 
-    public EnrollmentService(EnrollmentRepository enrollmentRepository, EnrollmentFacade enrollmentFacade, EnrollmentRepository enrollmentRepository1, EnrollmentMapper enrollmentMapper) {
+    public EnrollmentService(EnrollmentRepository enrollmentRepository, EnrollmentFacade enrollmentFacade, EnrollmentRepository enrollmentRepository1, EnrollmentMapper enrollmentMapper, StudentRepository studentRepository) {
         this.enrollmentFacade = enrollmentFacade;
         this.enrollmentRepository = enrollmentRepository1;
         this.enrollmentMapper = enrollmentMapper;
+        this.studentRepository = studentRepository;
     }
 
     public ApiResponse<EnrollmentResponse> addEnrollment(EnrollmentRequest enrollmentRequest){
@@ -66,5 +71,29 @@ public class EnrollmentService {
                 enrollmentPage.getTotalPages(),
                 enrollmentPage.isLast()
         );
+    }
+
+
+
+    public ApiResponse<EnrollmentResponse> updateEnrollment(Long id, EnrollmentRequest request){
+        Enrollment enrollmentToUpdate = enrollmentRepository.findById(id).orElseThrow(() -> new EnrollmentNotFoundException("id: "+id));
+        Student student = studentRepository.findById(request.studentId()).orElseThrow(()-> new StudentNotFoundException("id: "+request.studentId()));
+        enrollmentToUpdate.setStudent(student);
+        EnrollmentResponse enrollmentResponse = enrollmentMapper.toResponse(enrollmentRepository.save(enrollmentToUpdate));
+
+        return new ApiResponse<>(
+                "SUCCESS",
+                "Enrollment Updated Successfully",
+                enrollmentResponse
+        );
+    }
+
+    @Transactional
+    public ApiResponse<Void> unEnrollStudent(Long id){
+        int deletedRows = enrollmentRepository.deleteEnrollmentById(id);
+        if(deletedRows ==0){
+            return new ApiResponse<>("ERROR","Enrollment Id Unknown",null);
+        }
+        return new ApiResponse<>("SUCCESS","Student Unenrolled Successfully",null);
     }
 }
