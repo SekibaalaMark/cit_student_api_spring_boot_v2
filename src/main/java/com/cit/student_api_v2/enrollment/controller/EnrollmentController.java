@@ -53,12 +53,12 @@ public class EnrollmentController {
             @Valid @RequestBody EnrollmentRequest enrollmentRequest
     ){
         ApiResponse<EnrollmentResponse> apiResponse = enrollmentService.updateEnrollment(id,enrollmentRequest);
-
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
-
-
-
-
+    @DeleteMapping("/id/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteEnrollment(@PathVariable Long id){
+        ApiResponse<Void> apiResponse = enrollmentService.unEnrollStudent(id);
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
 }
